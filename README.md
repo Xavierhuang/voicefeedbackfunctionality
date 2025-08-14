@@ -21,9 +21,16 @@ A comprehensive Spanish language learning application with AI-powered voice feed
 ### 🎨 Modern UI/UX
 - **Responsive Design** for mobile and desktop
 - **Accessible Interface** with keyboard navigation
-- **Dark/Light Mode** support
+- **Optimized Bundle Size** with only necessary UI components
 - **Smooth Animations** and transitions
 - **Toast Notifications** for user feedback
+
+### ⚡ Performance & Optimization
+- **Direct Audio Analysis** for accurate pronunciation assessment
+- **Minimal Bundle Size** with unused components removed
+- **5-second Recording Limit** for optimal user experience
+- **Smart Fallback System** for browser compatibility
+- **Real-time Visual Feedback** during recording
 
 ## 🚀 Quick Start
 
@@ -63,7 +70,7 @@ A comprehensive Spanish language learning application with AI-powered voice feed
 src/
 ├── ai/                          # AI integration
 │   ├── flows/                   # AI workflows
-│   │   ├── enhanced-pronunciation-feedback.ts  # 🎯 Core voice feedback
+│   │   ├── audio-pronunciation-feedback.ts     # 🎯 Core audio analysis
 │   │   ├── generate-grammar-exercises.ts
 │   │   ├── review-chat.ts
 │   │   └── text-to-speech.ts
@@ -92,10 +99,11 @@ src/
 
 ### How It Works
 
-1. **Speech Recognition**: Uses Web Speech API to capture user audio
-2. **AI Analysis**: Google Gemini analyzes pronunciation against target phrases
-3. **Scoring**: Provides numerical scores (0-100) for multiple categories
-4. **Feedback**: Delivers detailed text feedback with improvement suggestions
+1. **Audio Recording**: Uses MediaRecorder API to capture high-quality audio
+2. **Direct Audio Analysis**: Google Gemini 2.0 Flash analyzes raw audio data
+3. **Speech Recognition Fallback**: Web Speech API as backup for unsupported browsers
+4. **AI Scoring**: Provides numerical scores (0-100) for multiple categories
+5. **Detailed Feedback**: Delivers specific pronunciation improvement suggestions in English
 
 ### Scoring Categories
 
@@ -142,13 +150,14 @@ export const ai = genkit({
 
 ## 📱 Usage Examples
 
-### Basic Voice Practice
+### Audio-Based Voice Practice
 
 ```typescript
-import { getPronunciationFeedback } from '@/ai/flows/enhanced-pronunciation-feedback';
+import { getAudioPronunciationFeedback } from '@/ai/flows/audio-pronunciation-feedback';
 
-const feedback = await getPronunciationFeedback({
-  spokenText: "Hola",
+const feedback = await getAudioPronunciationFeedback({
+  audioData: "base64_encoded_audio_data",
+  audioFormat: "webm", 
   targetPhrase: "Hola"
 });
 
@@ -161,10 +170,12 @@ console.log(feedback);
 //   intonationScore: 92,
 //   overallScore: 85,
 //   confidence: 0.9,
+//   transcribedText: "Hola",
 //   accuracy: "Your pronunciation of 'Hola' was quite accurate...",
 //   fluency: "The fluency was natural...",
 //   intonation: "Your intonation was appropriate...",
-//   overall: "¡Muy bien! Your pronunciation was excellent..."
+//   overall: "Very good! Your pronunciation was excellent...",
+//   specificIssues: []
 // }
 ```
 
