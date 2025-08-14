@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Volume2, Mic, Loader2, StopCircle, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { getPronunciationFeedback, PronunciationFeedbackOutput } from '@/ai/flows/enhanced-pronunciation-feedback';
 import { getAudioPronunciationFeedback, AudioPronunciationFeedbackOutput } from '@/ai/flows/audio-pronunciation-feedback';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { useToast } from "@/hooks/use-toast";
@@ -177,15 +176,24 @@ export default function ConversationModule({ lesson, onComplete }: ConversationM
   const checkPronunciation = async (transcript: string, currentTargetPhrase: string) => {
     setIsCheckingPronunciation(true);
     try {
-      const result = await getPronunciationFeedback({
-        spokenText: transcript,
-        targetPhrase: currentTargetPhrase,
-      });
+      // Legacy speech recognition fallback - provide basic feedback
+      const result = {
+        isCorrect: transcript.toLowerCase().includes(currentTargetPhrase.toLowerCase()),
+        accuracyScore: 75,
+        fluencyScore: 70,
+        intonationScore: 70,
+        overallScore: 72,
+        confidence: 0.6,
+        accuracy: "Using speech recognition fallback. For detailed pronunciation analysis, please use audio recording.",
+        fluency: "Speech recognition mode provides basic feedback only.",
+        intonation: "Switch to audio recording for detailed intonation analysis.",
+        overall: "Use the microphone for audio recording to get comprehensive pronunciation feedback.",
+      };
       // Convert to match new interface
       const audioResult: AudioPronunciationFeedbackOutput = {
         ...result,
         transcribedText: transcript,
-        specificIssues: [],
+        specificIssues: ["Speech recognition fallback - limited analysis"],
       };
       setAiFeedback(audioResult);
     } catch (error) {
